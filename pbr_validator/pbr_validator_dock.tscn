@@ -1,0 +1,330 @@
+[gd_scene load_steps=3 format=3 uid="uid://bgqpp56ne2s07"]
+
+[ext_resource type="Script" uid="uid://v2t84l6d7pfp" path="res://addons/pbr_validator/pbr_validator_dock.gd" id="1_gygav"]
+[ext_resource type="ButtonGroup" uid="uid://ivxnal17r7rm" path="res://addons/pbr_validator/quick_view_button_group.tres" id="2_bfqwl"]
+
+[node name="PBR Validator" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gygav")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="TitleBar" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer/TitleBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "PBR Validator"
+vertical_alignment = 1
+
+[node name="DockToggleButton" type="Button" parent="VBoxContainer/TitleBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(23, 0)
+layout_mode = 2
+tooltip_text = "Toggle Docked/Floating Window"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="MainControls" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="EnableToggleButton" type="Button" parent="VBoxContainer/MainControls"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Globally enables or disables the PBR Validator."
+toggle_mode = true
+text = "Enable PBR Validator"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/MainControls"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="QuickViewContainer" type="VBoxContainer" parent="VBoxContainer/MainControls"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="QuickViewLabel" type="Label" parent="VBoxContainer/MainControls/QuickViewContainer"]
+layout_mode = 2
+text = "Quick View"
+
+[node name="QuickViewButtons" type="HBoxContainer" parent="VBoxContainer/MainControls/QuickViewContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LitButton" type="Button" parent="VBoxContainer/MainControls/QuickViewContainer/QuickViewButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Disables validation and returns to the standard lit viewport."
+toggle_mode = true
+button_group = ExtResource("2_bfqwl")
+text = "Lit"
+
+[node name="AlbedoButton" type="Button" parent="VBoxContainer/MainControls/QuickViewContainer/QuickViewButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Shows the final, unlit albedo/base color of the materials."
+toggle_mode = true
+button_group = ExtResource("2_bfqwl")
+text = "Albedo"
+
+[node name="RoughnessButton" type="Button" parent="VBoxContainer/MainControls/QuickViewContainer/QuickViewButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Shows the final roughness value as a greyscale map (Black=0.0, White=1.0)."
+toggle_mode = true
+button_group = ExtResource("2_bfqwl")
+text = "Roughness"
+
+[node name="MetallicButton" type="Button" parent="VBoxContainer/MainControls/QuickViewContainer/QuickViewButtons"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Shows the final metallic value as a greyscale map (Black=0.0, White=1.0)."
+toggle_mode = true
+button_group = ExtResource("2_bfqwl")
+text = "Metallic"
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/MainControls"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AlbedoOptionsContainer" type="VBoxContainer" parent="VBoxContainer/MainControls"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AlbedoRangePresetLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+layout_mode = 2
+text = "Albedo Range Preset"
+
+[node name="AlbedoRangePresetSelector" type="OptionButton" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Choose a preset for dielectric albedo validation ranges."
+selected = 1
+item_count = 3
+popup/item_0/text = "Strict (sRGB 50-243)"
+popup/item_0/id = 0
+popup/item_1/text = "Non-Strict (sRGB 30-250)"
+popup/item_1/id = 1
+popup/item_2/text = "Custom"
+popup/item_2/id = 2
+
+[node name="InRangeGrid" type="GridContainer" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="InRangeLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/InRangeGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "In-Range View"
+
+[node name="InRangeModeSelector" type="OptionButton" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/InRangeGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+tooltip_text = "Choose how to display pixels that are within the valid albedo range."
+selected = 1
+item_count = 2
+popup/item_0/text = "Greyscale"
+popup/item_0/id = 0
+popup/item_1/text = "Color"
+popup/item_1/id = 1
+
+[node name="CustomAlbedoRangeContainer" type="GridContainer" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 3
+
+[node name="AlbedoRangeMinLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/CustomAlbedoRangeContainer"]
+layout_mode = 2
+text = "Min (sRGB)"
+
+[node name="AlbedoRangeMinSlider" type="HSlider" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/CustomAlbedoRangeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "Sets the minimum valid albedo value (in sRGB 0-255)."
+max_value = 255.0
+value = 30.0
+
+[node name="AlbedoRangeMinSpinBox" type="SpinBox" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/CustomAlbedoRangeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Sets the minimum valid albedo value (in sRGB 0-255)."
+max_value = 255.0
+value = 30.0
+rounded = true
+update_on_text_changed = true
+
+[node name="AlbedoRangeMaxLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/CustomAlbedoRangeContainer"]
+layout_mode = 2
+text = "Max (sRGB)"
+
+[node name="AlbedoRangeMaxSlider" type="HSlider" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/CustomAlbedoRangeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "Sets the maximum valid albedo value (in sRGB 0-255)."
+max_value = 255.0
+value = 250.0
+
+[node name="AlbedoRangeMaxSpinBox" type="SpinBox" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/CustomAlbedoRangeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Sets the maximum valid albedo value (in sRGB 0-255)."
+max_value = 255.0
+value = 250.0
+rounded = true
+update_on_text_changed = true
+
+[node name="HSeparator4" type="HSeparator" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+layout_mode = 2
+
+[node name="HardEdgedToggle" type="CheckBox" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Disables the gradient, showing a sharp pass/fail for out-of-range values."
+text = "Hard-Edged Validation"
+
+[node name="FalloffGrid" type="GridContainer" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="FalloffLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/FalloffGrid"]
+layout_mode = 2
+text = "Gradient Falloff"
+
+[node name="FalloffSlider" type="HSlider" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/FalloffGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+tooltip_text = "Controls the softness of the gradient at the validation boundaries. Lower values are sharper."
+min_value = 0.001
+max_value = 0.1
+step = 0.001
+value = 0.02
+
+[node name="FalloffSpinBox" type="SpinBox" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/FalloffGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Controls the softness of the gradient at the validation boundaries. Lower values are sharper."
+min_value = 0.001
+max_value = 0.1
+step = 0.001
+value = 0.02
+update_on_text_changed = true
+
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+layout_mode = 2
+
+[node name="ColorSettingsLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Color Settings"
+
+[node name="ColorSettingsGrid" type="GridContainer" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="UnderColorLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/ColorSettingsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Under Value"
+
+[node name="UnderColorPicker" type="ColorPickerButton" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/ColorSettingsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Sets the color for highlighting albedo values that are too dark."
+color = Color(1, 0, 0, 1)
+
+[node name="OverColorLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/ColorSettingsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Over Value"
+
+[node name="OverColorPicker" type="ColorPickerButton" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/ColorSettingsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Sets the color for highlighting albedo values that are too bright."
+color = Color(0, 0, 1, 1)
+
+[node name="InRangeColorLabel" type="Label" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/ColorSettingsGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "In-Range Value"
+
+[node name="InRangeColorPicker" type="ColorPickerButton" parent="VBoxContainer/MainControls/AlbedoOptionsContainer/ColorSettingsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Sets the color for replacing in-range albedo values."
+color = Color(0, 1, 0, 1)
+
+[node name="ResetAlbedoButton" type="Button" parent="VBoxContainer/MainControls/AlbedoOptionsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Resets all albedo options to their default values."
+text = "Reset to Defaults"
+
+[node name="RoughnessOptionsContainer" type="VBoxContainer" parent="VBoxContainer/MainControls"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HighlightExtremesToggle" type="CheckBox" parent="VBoxContainer/MainControls/RoughnessOptionsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Highlights roughness values that are pure black (0.0) or pure white (1.0)."
+text = "Highlight Extreme Values"
+
+[node name="ExtremeColorGrid" type="GridContainer" parent="VBoxContainer/MainControls/RoughnessOptionsContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="ExtremeColorLabel" type="Label" parent="VBoxContainer/MainControls/RoughnessOptionsContainer/ExtremeColorGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Highlight Color"
+
+[node name="ExtremeColorPicker" type="ColorPickerButton" parent="VBoxContainer/MainControls/RoughnessOptionsContainer/ExtremeColorGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Sets the color for highlighting extreme roughness values."
+color = Color(1, 0, 1, 1)
+
+[node name="ResetRoughnessButton" type="Button" parent="VBoxContainer/MainControls/RoughnessOptionsContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Resets all roughness options to their default values."
+text = "Reset to Defaults"
