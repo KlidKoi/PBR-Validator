@@ -3,7 +3,7 @@ extends EditorPlugin
 
 # This script implements the PBR Validator plugin for Godot Engine.
 
-const dock_scene: PackedScene = preload("res://addons/pbr_validator/pbr_validator_dock.tscn")
+var dock_scene: PackedScene = null
 
 var dock_instance: Control = null
 
@@ -14,6 +14,11 @@ var _base_control: Control = null
 
 
 func _enter_tree() -> void:
+	dock_scene = load("res://addons/pbr_validator/pbr_validator_dock.tscn")
+	if not dock_scene:
+		printerr("PBR Validator: Could not load dock scene at res://addons/pbr_validator/pbr_validator_dock.tscn")
+		return
+
 	_base_control = EditorInterface.get_base_control()
 	dock_instance = dock_scene.instantiate()
 	dock_instance.set_plugin_reference(self)
@@ -26,13 +31,8 @@ func _enter_tree() -> void:
 	var undock_icon: Texture2D = _base_control.get_theme_icon("MakeFloating", "EditorIcons")
 	dock_instance.dock_toggle_button.icon = undock_icon
 
-	# Focus the tab in the dock when plugin is enabled
-	var tab_container: TabContainer = dock_instance.get_parent().get_parent() as TabContainer
-	if tab_container is TabContainer:
-		for i in range(tab_container.get_tab_count()):
-			if tab_container.get_tab_control(i) == dock_instance.get_parent():
-				tab_container.call_deferred("set", "current_tab", i)
-				break
+	# Focus the tab in the dock when plugin is enabled - using a more robust approach
+	_focus_dock_tab()
 	
 	# Connect to theme change signal
 	_base_control.theme_changed.connect(_on_editor_theme_changed)
@@ -129,12 +129,7 @@ func _redock_panel() -> void:
 	add_control_to_dock(DOCK_SLOT_RIGHT_UR, dock_instance)
 
 	# Re-focus the tab when re-docking into the main editor UI
-	var tab_container: TabContainer = dock_instance.get_parent().get_parent() as TabContainer
-	if tab_container is TabContainer:
-		for i in range(tab_container.get_tab_count()):
-			if tab_container.get_tab_control(i) == dock_instance.get_parent():
-				tab_container.call_deferred("set", "current_tab", i)
-				break
+	_focus_dock_tab()
 				
 	dock_instance.dock_toggle_button.icon = _base_control.get_theme_icon("MakeFloating", "EditorIcons")
 	dock_instance.dock_toggle_button.tooltip_text = "Undock Panel"
@@ -170,4 +165,34 @@ func _update_panel_theme() -> void:
 	panel_style.border_width_bottom = 0
 	
 	_floating_panel.add_theme_stylebox_override("panel", panel_style)
+
+
+# Helper function to focus the dock tab
+func _focus_dock_tab() -> void:
+	await get_tree().process_frame
+	
+	var version = Engine.get_version_info()
+	# Godot 4.6+ changed how dock focus works
+	if version.major == 4 and version.minor >= 6:
+		var parent = dock_instance.get_parent()
+		if not parent:
+			return
+			
+		var tab_container = parent.get_parent() as TabContainer
+		if not tab_container:
+			return
+			
+		for i in range(tab_container.get_tab_count()):
+			if tab_container.get_tab_control(i) == parent:
+				if tab_container.current_tab != i:
+					tab_container.current_tab = i
+				break
+	else:
+		# Godot 4.5 and older
+		var tab_container: TabContainer = dock_instance.get_parent()
+		if tab_container is TabContainer:
+			for i in range(tab_container.get_tab_count()):
+				if tab_container.get_tab_control(i) == dock_instance:
+					tab_container.call_deferred("set", "current_tab", i)
+					break
 
