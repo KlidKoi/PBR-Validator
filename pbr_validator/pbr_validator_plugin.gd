@@ -1,6 +1,8 @@
 @tool
 extends EditorPlugin
 
+# This script implements the PBR Validator plugin for Godot Engine.
+
 const dock_scene: PackedScene = preload("res://addons/pbr_validator/pbr_validator_dock.tscn")
 
 var dock_instance: Control = null
@@ -25,10 +27,10 @@ func _enter_tree() -> void:
 	dock_instance.dock_toggle_button.icon = undock_icon
 
 	# Focus the tab in the dock when plugin is enabled
-	var tab_container: TabContainer = dock_instance.get_parent()
+	var tab_container: TabContainer = dock_instance.get_parent().get_parent() as TabContainer
 	if tab_container is TabContainer:
 		for i in range(tab_container.get_tab_count()):
-			if tab_container.get_tab_control(i) == dock_instance:
+			if tab_container.get_tab_control(i) == dock_instance.get_parent():
 				tab_container.call_deferred("set", "current_tab", i)
 				break
 	
@@ -100,6 +102,7 @@ func _undock_panel() -> void:
 	
 	_floating_window.add_child(_floating_panel)
 	_floating_panel.add_child(margin_container)
+	dock_instance.get_parent().remove_child(dock_instance)
 	margin_container.add_child(dock_instance)
 	
 	# When the window is closed, re-dock the panel
@@ -126,10 +129,10 @@ func _redock_panel() -> void:
 	add_control_to_dock(DOCK_SLOT_RIGHT_UR, dock_instance)
 
 	# Re-focus the tab when re-docking into the main editor UI
-	var tab_container: TabContainer = dock_instance.get_parent()
+	var tab_container: TabContainer = dock_instance.get_parent().get_parent() as TabContainer
 	if tab_container is TabContainer:
 		for i in range(tab_container.get_tab_count()):
-			if tab_container.get_tab_control(i) == dock_instance:
+			if tab_container.get_tab_control(i) == dock_instance.get_parent():
 				tab_container.call_deferred("set", "current_tab", i)
 				break
 				
